@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olamide Ilori</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Reset and Globals */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a0a0a;
+            --accent: #d4d5c6;
+            --text: #f5f5f5;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary);
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-theme {
+            --primary: #0a0a0a;
+            --text: #f5f5f5;
+        }
+
+        body.light-theme {
+            --primary: #f5f5f5;
+            --text: #0a0a0a;
+        }
+
+        /* Custom cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            transition: transform 0.2s ease, border-color 0.3s ease;
+            z-index: 9999;
+            display: none;
+        }
+
+        body.light-theme .cursor {
+            border-color: var(--primary);
+        }
+
+        .cursor-follower {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            z-index: 9999;
+            display: none;
+        }
+
+        body.light-theme .cursor-follower {
+            background-color: var(--primary);
+        }
+
+        a, button {
+            cursor: none;
+        }
+
+        a:hover ~ .cursor:not(.business-item .cursor, .socials .cursor),
+        button:hover ~ .cursor {
+            transform: translate(-50%, -50%) scale(1.2);
+            border-color: var(--accent);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .section {
+            width: 100%;
+            max-width: 1200px;
+            padding: 40px 20px;
+            text-align: left;
+            position: relative;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section {
+            background: var(--primary);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 80px 20px 10px 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 2px solid var(--accent);
+        }
+
+        body.light-theme .profile-img {
+            border-color: var(--primary);
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: auto;
+            padding: 0;
+            margin: 0;
+            margin-top: 4px;
+        }
+
+        .profile-info h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .profile-info p {
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.8;
+            line-height: 1.2;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            position: relative;
+        }
+
+        .hero-section h1::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background-color: var(--accent);
+        }
+
+        body.light-theme .hero-section h1::after {
+            background-color: #0a0a0a;
+        }
+
+        .hero-section p {
+            font-size: 1rem;
+            margin-bottom: 30px;
+            max-width: 650px;
+            line-height: 1.8;
+            opacity: 0.9;
+            color: var(--text);
+        }
+
+        /* Formspree form styling */
+        .email-form {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .email-form form {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 15px;
+        }
+
+        .email-form label {
+            display: none; /* Hide label for cleaner look */
+        }
+
+        .email-form input[type="email"] {
+            padding: 16px 24px;
+            border-radius: 30px;
+            border: none;
+            width: 60%;
+            font-size: 1.1rem;
+            background-color: #333;
+            color: #f5f5f5;
+            outline: none;
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .email-form input[type="email"]:focus {
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .email-form button[type="submit"] {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            outline: none;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .email-form button[type="submit"]:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .email-form button[type="submit"]::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .email-form button[type="submit"]:hover::before {
+            left: 0;
+        }
+
+        body.light-theme .email-form button[type="submit"] {
+            background: var(--primary);
+            color: var(--accent);
+        }
+
+        body.light-theme .email-form button[type="submit"]:hover {
+            color: var(--primary);
+        }
+
+        /* Response messages */
+        #formspree-success-response,
+        #formspree-error-response {
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.9;
+            margin-top: 10px;
+            text-align: left;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #formspree-success-response {
+            color: var(--accent);
+        }
+
+        #formspree-error-response {
+            color: #ff5555;
+        }
+
+        .creators-text {
+            font-size: 0.8rem;
+            color: var(--text);
+            opacity: 0.6;
+            font-weight: 300;
+            margin-top: 8px;
+            text-align: left;
+        }
+
+        /* Mobile-Friendly Adjustments */
+        @media screen and (max-width: 768px) {
+            .email-form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .email-form form {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .email-form input[type="email"] {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+                font-size: 1rem;
+                padding: 14px 20px;
+            }
+
+            .email-form button[type="submit"] {
+                width: 100%;
+                max-width: 250px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            #formspree-success-response,
+            #formspree-error-response {
+                text-align: center;
+                font-size: 0.85rem;
+            }
+
+            .creators-text {
+                text-align: center;
+                font-size: 0.7rem;
+                margin-top: 6px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .email-form input[type="email"] {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+
+            .email-form button[type="submit"] {
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+
+            .creators-text {
+                font-size: 0.65rem;
+                margin-top: 6px;
+            }
+
+            #formspree-success-response,
+            #formspree-error-response {
+                font-size: 0.8rem;
+            }
+        }
+
+        .businesses-section {
+            background: var(--primary);
+            color: var(--text);
+            padding: 10px 20px 60px 20px;
+        }
+
+        .businesses-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: var(--text);
+            opacity: 0.9;
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .business-item {
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .business-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .business-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        .business-item h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+
+        .business-item p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            opacity: 0.9;
+            text-align: left;
+            max-width: 600px;
+            margin-left: 0;
+            margin-right: auto;
+            transition: opacity 0.5s ease;
+            color: var(--text);
+        }
+
+        .business-item a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .business-item a:hover p {
+            opacity: 0.5;
+        }
+
+        .story-section {
+            background: var(--primary);
+            color: var(--text);
+            padding: 30px 20px;
+        }
+
+        .story-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+
+        .story-section p {
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            max-width: 700px;
+            line-height: 1.8;
+            opacity: 0.9;
+            color: var(--text);
+        }
+
+        .socials {
+            display: flex;
+            justify-content: flex-start;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .socials a {
+            color: var(--text);
+            font-size: 1rem;
+            text-decoration: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.light-theme .socials a {
+            border-color: rgba(0, 0, 0, 0.2);
+            color: var(--primary);
+        }
+
+        .socials a i {
+            display: inline-block;
+            font-size: 1rem;
+            line-height: 35px;
+            text-align: center;
+        }
+
+        .socials a:hover {
+            background: var(--accent);
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .footer {
+            align-self: center;
+            width: 100%;
+            max-width: 1200px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        body.light-theme .footer {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        /* General Responsive Design */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .section {
+                padding: 20px 15px;
+                text-align: center;
+            }
+
+            .hero-section {
+                padding: 40px 15px 5px 15px;
+                align-items: center;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-img {
+                width: 40px;
+                height: 40px;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .profile-info {
+                height: auto;
+                margin-top: 0;
+            }
+
+            .profile-info h2 {
+                font-size: 1.2rem;
+                line-height: 1.2;
+            }
+
+            .profile-info p {
+                font-size: 0.85rem;
+                line-height: 1.2;
+            }
+
+            .hero-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-section h1::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .hero-section p {
+                text-align: center;
+                font-size: 0.875rem;
+            }
+
+            .businesses-section {
+                padding: 5px 15px 20px 15px;
+            }
+
+            .businesses-section h1 {
+                text-align: center;
+                font-size: 1.5rem;
+                margin-bottom: 0px;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                font-size: 0.85rem;
+                margin-bottom: 5px;
+            }
+
+            .business-header {
+                justify-content: center;
+                margin-bottom: 3px;
+            }
+
+            .business-logo {
+                width: 36px;
+                height: 36px;
+                margin-right: 10px;
+            }
+
+            .business-item h2 {
+                font-size: 1.2rem;
+            }
+
+            .business-item p {
+                text-align: center;
+                margin: 0 auto;
+                font-size: 0.85rem;
+                line-height: 1.8;
+            }
+
+            .story-section {
+                padding: 15px 15px;
+            }
+
+            .story-section h1 {
+                font-size: 1.5rem;
+            }
+
+            .story-section p {
+                text-align: center;
+                font-size: 0.85rem;
+                margin-bottom: 15px;
+            }
+
+            .socials {
+                justify-content: center;
+                gap: 20px;
+            }
+
+            .socials a {
+                width: 30px;
+                height: 30px;
+            }
+
+            .socials a i {
+                font-size: 0.9rem;
+                line-height: 30px;
+            }
+
+            .footer {
+                align-self: center;
+                text-align: center;
+                font-size: 0.75rem;
+                padding: 15px 0;
+                width: 100%;
+                max-width: 1200px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .hero-section h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero-section p {
+                font-size: 0.875rem;
+                line-height: 1.9;
+            }
+
+            .profile-info h2 {
+                font-size: 1.1rem;
+            }
+
+            .profile-info p {
+                font-size: 0.75rem;
+            }
+
+            .profile-img {
+                width: 36px;
+                height: 36px;
+            }
+
+            .businesses-section h1 {
+                font-size: 1.3rem;
+            }
+
+            .section-subtitle {
+                font-size: 0.8rem;
+                line-height: 1.9;
+            }
+
+            .business-item h2 {
+                font-size: 1rem;
+            }
+
+            .business-item p {
+                font-size: 0.8rem;
+                line-height: 1.9;
+            }
+
+            .story-section h1 {
+                font-size: 1.3rem;
+            }
+
+            .story-section p {
+                font-size: 0.8rem;
+                line-height: 1.9;
+            }
+
+            .socials a {
+                width: 28px;
+                height: 28px;
+            }
+
+            .socials a i {
+                font-size: 0.85rem;
+                line-height: 28px;
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <div class="container">
+        <section class="hero-section section">
+            <div class="profile-header">
+                <img src="https://i.imgur.com/mDYQjJb.jpeg" alt="Olamide Ilori" class="profile-img">
+                <div class="profile-info">
+                    <h2>Olamide Ilori</h2>
+                    <p>Solopreneur</p>
+                </div>
+            </div>
+            <h1>Building A Digital Product Business, Sharing The Process With Others.</h1>
+            <p>Helping content creators with cross-platform content creation & posting, with my custom made automated templates and system.</p>
+            <div class="email-form">
+                <form action="https://formspree.io/f/xzzrzddn" method="POST" id="blueprint-form">
+                    <input type="email" name="email" placeholder="Enter your email address" required>
+                    <button type="submit">Get Access</button>
+                </form>
+                <div id="formspree-responses" class="clear">
+                    <div class="response" id="formspree-success-response" style="display:none"></div>
+                    <div class="response" id="formspree-error-response" style="display:none"></div>
+                </div>
+            </div>
+            <p class="creators-text">Access my Cross-Platform Blueprint and a free dashboard</p>
+        </section>
+
+        <section class="businesses-section section">
+            <h1>Business</h1>
+            <p class="section-subtitle">This is my current digital product business that I run.</p>
+            <div class="business-item">
+                <div class="business-header">
+                    <img src="https://i.imgur.com/lD8Micm.png" alt="Cryio Logo" class="business-logo">
+                    <h2>Cryio</h2>
+                </div>
+                <a href="https://cryio.super.site" target="_blank" rel="noopener noreferrer">
+                    <p>
+                        Cryio is a notion based digital brand, seeking to help all content creators with the challenge of cross-platform content and posting.
+                    </p>
+                </a>
+            </div>
+        </section>
+
+        <section class="story-section section">
+            <h1>My Story</h1>
+            <p>
+                I began my journey as a curious 15-year-old, eager to make a mark in the digital world. I started with trading—late nights, countless videos, books—but eventually realized the capital required was too much to sustain.
+            </p>
+            <p>At 16, I discovered the agency model and launched Roomreach. I reached out to clients but got no responses. It was tough, but I didn’t give up. I then tried starting a clothing brand—it didn’t take off. I launched another agency, Redx, but again, no luck with clients.</p>
+            <p>Next was dropshipping. I ran into issues with Shopify and had to pause. But each setback taught me something new.</p>
+            <p>Now at 17, I’ve found a passion for digital products—and that’s how Cryio was born. I’m still learning, still building, and far from where I want to be. But one thing’s for sure—I’m not stopping anytime soon.</p>
+            <div class="socials">
+                <a href="https://twitter.com/olamideilori_" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://instagram.com/olamideilori_" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.youtube.com/@olamide_ilori" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </section>
+
+        <footer class="footer">
+            © 2025 Olamide Ilori. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        // Custom cursor functionality
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        function isMobileDevice() {
+            return (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1);
+        }
+
+        if (!isMobileDevice()) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.display = 'block';
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+
+                cursorFollower.style.display = 'block';
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            });
+
+            document.addEventListener('mousedown', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(0.9)';
+                cursorFollower.style.transform = 'translate(-50%, -50%) scale(0.7)';
+            });
+
+            document.addEventListener('mouseup', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+
+            document.addEventListener('mouseleave', () => {
+                cursor.style.display = 'none';
+                cursorFollower.style.display = 'none';
+            });
+
+            document.addEventListener('mouseenter', () => {
+                cursor.style.display = 'block';
+                cursorFollower.style.display = 'block';
+            });
+        } else {
+            if (cursor) cursor.remove();
+            if (cursorFollower) cursorFollower.remove();
+            document.body.style.cursor = 'auto';
+            document.querySelectorAll('a, button').forEach(item => {
+                item.style.cursor = 'pointer';
+            });
+        }
+
+        // Formspree form submission with on-page feedback
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('blueprint-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            document.getElementById('formspree-success-response').style.display = 'block';
+                            document.getElementById('formspree-success-response').innerText = 'Thanks for joining! Check your email for the Blueprint.';
+                            form.reset();
+                        } else {
+                            document.getElementById('formspree-error-response').style.display = 'block';
+                            document.getElementById('formspree-error-response').innerText = 'Something went wrong. Please try again.';
+                        }
+                    })
+                    .catch(() => {
+                        document.getElementById('formspree-error-response').style.display = 'block';
+                        document.getElementById('formspree-error-response').innerText = 'Something went wrong. Please try again.';
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
